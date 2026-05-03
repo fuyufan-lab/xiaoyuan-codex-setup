@@ -10,6 +10,8 @@ Required before every push or release:
 bash scripts/publication_guard.sh
 ```
 
+GitHub Actions activation requires a token with workflow permission. The workflow template is kept in `GITHUB_ACTIONS_PUBLICATION_GUARD.yml`; move it to `.github/workflows/publication-guard.yml` only with a credential that can update workflows.
+
 The guard blocks:
 
 - archived or binary payloads
