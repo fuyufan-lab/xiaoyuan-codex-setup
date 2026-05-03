@@ -1,0 +1,64 @@
+{
+  "product": "xiaoyuan-public-bootstrap",
+  "platform": "windows",
+  "version": "0.3.54",
+  "channel_role": "configuration_and_recovery_only",
+  "release_status": "public_source_payloads_revoked",
+  "security_boundary": {
+    "core_source_in_public_repo": false,
+    "full_control_panel_source_archives_in_public_repo": false,
+    "allowed_public_contents": [
+      "quickstart",
+      "configuration checklist",
+      "Codex compatibility recovery guide",
+      "public API contract",
+      "safe manifest metadata"
+    ],
+    "blocked_public_contents": [
+      "backend source",
+      "core reasoning logic",
+      "private runtime logic",
+      "full xiaoyuan-control-panel zip/tar payloads"
+    ]
+  },
+  "api_server_url": "https://yh.xiaofenhe.com/api/public-v3",
+  "install_root": "%USERPROFILE%\\.xiaoyuan-codex-setup",
+  "terminal_sidecar": "user_started_xiaoyuan_start",
+  "docs": {
+    "readme": "https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/README.md",
+    "terminal_quickstart": "https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/TERMINAL_QUICKSTART.md",
+    "mcp_client_setup": "https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/MCP_CLIENT_SETUP.md",
+    "configuration_complete": "https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/CONFIGURATION_COMPLETE.md",
+    "codex_compatibility_recovery": "https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/CODEX_COMPATIBILITY_RECOVERY.md",
+    "public_v3_api": "https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/PUBLIC_V3_API.md"
+  },
+  "installable_payload": {
+    "available_from_public_github": true,
+    "required_form": "client_only_package_or_signed_binary_without_core_source",
+    "reason": "Public GitHub releases must not expose Xiaoyuan backend/core design.",
+    "windows_installer": "https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/install.ps1",
+    "windows_installer_sha256": "5495dee2d8e4f86297ce7f1929e8aa264751ff4123045121b86ed35e9ef434a7",
+    "posix_installer": "https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/install.sh",
+    "posix_installer_sha256": "5e0b1586c6fc9ea6a855bd867d38dfe7a492b2ce54ab1d2e8e384431d19c2842",
+    "client_python": "https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/client/xiaoyuan_client.py",
+    "client_python_sha256": "608086b31fea5398233281f6b85801ceefe049c9a527134983754f2cc3877f5e",
+    "commands": [
+      "xiaoyuan install",
+      "xiaoyuan login",
+      "xiaoyuan doctor --strict",
+      "xiaoyuan start",
+      "xiaoyuan mcp-config",
+      "xiaoyuan mcp-stdio",
+      "xiaoyuan providers",
+      "xiaoyuan call-provider",
+      "xiaoyuan capabilities",
+      "xiaoyuan capability-route",
+      "xiaoyuan capability-execute"
+    ]
+  },
+  "evidence_boundary": [
+    "public_repo_is_bootstrap_docs_only",
+    "E2_install_evidence_requires_safe_client_package_or_private_runtime_delivery",
+    "do_not_claim_E3_or_E4_from_public_manifest"
+  ]
+}
