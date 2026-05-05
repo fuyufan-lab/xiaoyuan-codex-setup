@@ -426,7 +426,7 @@ def doctor_result(config: dict[str, Any]) -> dict[str, Any]:
         add("config_file_private", mode <= 0o600, oct(mode))
     api_status: dict[str, Any] = {}
     try:
-        api_status = http_json(config, "GET", "/status", timeout=12, auth=bool(config.get("session_token")))
+        api_status = http_json(config, "GET", "/status", timeout=12, auth=True)
         add("api_status_reachable", True, api_status.get("decision") or api_status.get("status") or "ok")
     except Exception as exc:
         add("api_status_reachable", False, str(exc))
@@ -691,7 +691,7 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 def cmd_capabilities(_: argparse.Namespace) -> int:
     config = load_config(required=False)
-    result = http_json(config, "GET", "/capabilities", timeout=20, auth=False)
+    result = http_json(config, "GET", "/capabilities", timeout=20, auth=True)
     print_json(result)
     return 0
 
@@ -832,8 +832,20 @@ def mcp_tools() -> list[dict[str, Any]]:
     ]
 
 
+def _sanitize(obj: Any) -> Any:
+    """Remove lone surrogate characters that are valid in JSON but not in UTF-8."""
+    if isinstance(obj, str):
+        return obj.encode("utf-8", errors="surrogatepass").decode("utf-8", errors="replace")
+    if isinstance(obj, dict):
+        return {k: _sanitize(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize(v) for v in obj]
+    return obj
+
+
 def mcp_text(payload: Any) -> dict[str, Any]:
-    text = payload if isinstance(payload, str) else json.dumps(payload, ensure_ascii=False, indent=2)
+    safe = _sanitize(payload)
+    text = safe if isinstance(safe, str) else json.dumps(safe, ensure_ascii=True, indent=2)
     return {"content": [{"type": "text", "text": text}]}
 
 
@@ -863,9 +875,9 @@ def mcp_call_tool(config: dict[str, Any], name: str, arguments: dict[str, Any]) 
             raise ValueError("run_id is required")
         return mcp_text(http_json(config, "GET", f"/runs/events?run_id={urllib.parse.quote(run_id)}", timeout=30, auth=True))
     if name == "xiaoyuan_runtime_status":
-        return mcp_text(http_json(config, "GET", "/status", timeout=12, auth=bool(config.get("session_token"))))
+        return mcp_text(http_json(config, "GET", "/status", timeout=12, auth=True))
     if name == "xiaoyuan_capabilities":
-        return mcp_text(http_json(config, "GET", "/capabilities", timeout=20, auth=False))
+        return mcp_text(http_json(config, "GET", "/capabilities", timeout=20, auth=True))
     if name == "xiaoyuan_capability_route":
         payload = {
             "message": str(args.get("message") or ""),
@@ -915,6 +927,10 @@ def mcp_error(message_id: Any, code: int, message: str) -> dict[str, Any]:
 
 
 def cmd_mcp_stdio(_: argparse.Namespace) -> int:
+    # Force UTF-8 for MCP stdio pipes (Windows sandbox may use cp936 by default)
+    import io
+    sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors='replace')
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
     config = load_config(required=False)
     for raw_line in sys.stdin:
         raw_line = raw_line.strip()
