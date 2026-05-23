@@ -4,6 +4,12 @@
 
 ## 一键安装
 
+**Windows:**
+在 PowerShell（管理员）中运行：
+
+**macOS / Linux:**
+在终端中运行：
+
 在 **PowerShell（管理员）** 中运行：
 
 `powershell

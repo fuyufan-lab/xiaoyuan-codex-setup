@@ -13,6 +13,11 @@ If you use **Qoder / Yuan IDE**, install the Xiaoyuan CPOS v8.0 cognitive pipeli
 irm https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/qoder-config/install.ps1 | iex
 ```
 
+**macOS / Linux:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/qoder-config/install.sh | bash
+```
+
 See [qoder-config/README.md](qoder-config/README.md) for full documentation.
 
 
