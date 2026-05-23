@@ -3,6 +3,18 @@
 This public repository is the public bootstrap entry for Xiaoyuan public-v3 developer users.
 
 Target workflow: developers keep using Codex / Claude Code normally in their own terminal, then use this repository for public configuration, diagnostics, terminal-side dispatch, and compatibility recovery.
+---
+
+## Qoder CPOS Pipeline (NEW)
+
+If you use **Qoder / Yuan IDE**, install the Xiaoyuan CPOS v8.0 cognitive pipeline to get automatic oracle analysis, situation awareness, meta-audit, and 32-endpoint full pipeline on every message:
+
+```powershell
+irm https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/qoder-config/install.ps1 | iex
+```
+
+See [qoder-config/README.md](qoder-config/README.md) for full documentation.
+
 
 Security boundary: this repository must not contain Xiaoyuan backend source, core reasoning logic, private runtime logic, or full control-panel source archives. Public installable artifacts must be client-only packages or signed binaries that do not expose core design.
 

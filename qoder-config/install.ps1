@@ -1,44 +1,67 @@
-<# 
-  小元 x Qoder 配置一键安装脚本
-  用法: irm https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/qoder-config/install.ps1 | iex
+<#
+  Xiaoyuan x Qoder CPOS Pipeline Setup
+  =====================================
+  One-command install:
+    irm https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/qoder-config/install.ps1 | iex
 #>
 
-$ErrorActionPreference = Stop
-$repo = https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/qoder-config
-$qoderDir = $env:USERPROFILE\.qoder
+Continue = 'Stop'
+ = 'https://raw.githubusercontent.com/fuyufan-lab/xiaoyuan-codex-setup/main/qoder-config'
+ =  C:\Users\WZ\.qoder
 
-Write-Host === 小元 x Qoder 配置安装 === -ForegroundColor Cyan
+Write-Host ''
+Write-Host '============================================' -ForegroundColor Cyan
+Write-Host '  Xiaoyuan x Qoder CPOS Pipeline Setup' -ForegroundColor Cyan
+Write-Host '============================================' -ForegroundColor Cyan
+Write-Host ''
 
-# 1. 创建目录结构
-$dirs = @(
-    $qoderDir\rules,
-    $qoderDir\skills\cpos-pipeline,
-    $qoderDir\skills\swarm-dispatch,
-    $qoderDir\agents,
-    $qoderDir\cpos
+ = @(
+    \rules,
+    \skills\cpos-pipeline,
+    \skills\swarm-dispatch,
+    \skills\cpos-execute,
+    \agents,
+    \cpos
 )
-foreach ($d in $dirs) {
-    New-Item -ItemType Directory -Force -Path $d | Out-Null
+foreach ( in ) {
+    New-Item -ItemType Directory -Force -Path  | Out-Null
 }
 
-# 2. 下载配置文件
-$files = @{
-    rules/always-cpos.md                    = $qoderDir\rules\always-cpos.md
-    skills/cpos-pipeline/SKILL.md           = $qoderDir\skills\cpos-pipeline\SKILL.md
-    skills/swarm-dispatch/SKILL.md          = $qoderDir\skills\swarm-dispatch\SKILL.md
-    agents/coder.md                         = $qoderDir\agents\coder.md
-    cpos/runner.py                          = $qoderDir\cpos\runner.py
+ = @{
+    'rules/always-cpos.md'           = \rules\always-cpos.md
+    'skills/cpos-pipeline/SKILL.md'  = \skills\cpos-pipeline\SKILL.md
+    'skills/swarm-dispatch/SKILL.md' = \skills\swarm-dispatch\SKILL.md
+    'skills/cpos-execute/SKILL.md'   = \skills\cpos-execute\SKILL.md
+    'agents/coder.md'                = \agents\coder.md
+    'cpos/runner.py'                 = \cpos\runner.py
 }
 
-foreach ($src in $files.Keys) {
-    $dst = $files[$src]
-    $url = $repo/$src
-    Write-Host  下载: $src -ForegroundColor Gray
-    Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $dst
+ = 0
+ = 0
+
+foreach ( in .Keys) {
+     = []
+     = /
+    Write-Host ( [..]  + ) -ForegroundColor Gray -NoNewline
+    try {
+        Invoke-WebRequest -UseBasicParsing -Uri  -OutFile  -ErrorAction Stop
+        Write-Host ' OK' -ForegroundColor Green
+        ++
+    } catch {
+        Write-Host (' FAIL ' + .Exception.Message) -ForegroundColor Red
+        ++
+    }
 }
 
-Write-Host "
-Write-Host 安装完成！ -ForegroundColor Green
-Write-Host 文件已写入: $qoderDir -ForegroundColor Green
-Write-Host "
-Write-Host 接下来重启 Qoder（源）即可生效。 -ForegroundColor Yellow
+Write-Host ''
+Write-Host '============================================' -ForegroundColor Cyan
+Write-Host ( Result:  +  +  ok  +  +  failed) -ForegroundColor ( -gt 0 ? 'Red' : 'Green')
+Write-Host ( Installed to:  + ) -ForegroundColor White
+Write-Host '============================================' -ForegroundColor Cyan
+Write-Host ''
+Write-Host 'Next steps:' -ForegroundColor Yellow
+Write-Host '  1. Restart Qoder (Yuan) IDE' -ForegroundColor White
+Write-Host '  2. Open any project, CPOS pipeline activates automatically' -ForegroundColor White
+Write-Host '  3. You should see [CPOS: ...] header in responses' -ForegroundColor White
+Write-Host ''
+Write-Host 'Docs: https://github.com/fuyufan-lab/xiaoyuan-codex-setup/tree/main/qoder-config' -ForegroundColor Gray
